@@ -75,6 +75,9 @@ var widthof = 5;
 var widthofMax = 500;
 var widthofMin = 1;
 var widthofStep = 1;
+let previousState;
+
+let stateIndex = 0;
 function preload() {
   // img = loadImage("img.jpeg");
 }
@@ -87,6 +90,7 @@ function setup() {
   brushes = [];
   addbrushes();
   createinterface();
+  saveState();
   // blueCa = new Riso("blue");
   // let justCyan = extractCMYKChannel(img, "blue");
   // blueCa.image(justCyan, 0, 0);
@@ -99,6 +103,7 @@ function draw() {
   c = color(brushColor);
   c.setAlpha(opacity);
   if (mouseIsPressed === true) {
+    saveState();
     for (x1 of brushes) {
       if (x1.active) {
         x1.runfunction();
@@ -106,9 +111,33 @@ function draw() {
       }
     }
   }
-  drawRiso();
+  // drawRiso();
+}
+function keyPressed(e) {
+  // check if the event parameter (e) has Z (keycode 90) and ctrl or cmnd
+  if (e.keyCode == 90 && (e.ctrlKey || e.metaKey)) {
+    undoToPreviousState();
+  }
 }
 
+function saveState() {
+  // save state by taking image of background
+  // for more info look at reference for get
+  previousState = get();
+}
+function undoToPreviousState() {
+  // if previousState doesn't exist ie is null
+  // return without doing anything
+  if (!previousState) {
+    return;
+  }
+  // else draw the background (in this case white)
+  // and draw the previous state
+  background(255);
+  image(previousState, 0, 0);
+  // then set previous state to null
+  previousState = null;
+}
 function touchMoved() {
   return false;
 }
