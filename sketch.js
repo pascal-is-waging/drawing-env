@@ -1,4 +1,3 @@
-// influenced by : https://library.superhi.com/posts/how-to-paint-with-code-creating-paintbrushes
 class Brush {
   constructor(name, active, func) {
     this.name = name;
@@ -52,7 +51,7 @@ var risoColors = [
 // console.log(risoColors);
 var brushNum;
 // var brushColor = [180, 0, 200];
-var brushColor = ["#ff2205", "#3f05ff", "#91ff01"];
+var brushColor = ["#ff2205", "#3f05ff", "#91ff01", "#ffffff"];
 var brushStroke = false;
 var opacity = 200;
 var opacityMax = 255;
@@ -115,30 +114,11 @@ function draw() {
   // drawRiso();
 }
 function keyPressed(e) {
-  // check if the event parameter (e) has Z (keycode 90) and ctrl or cmnd
   if (e.keyCode == 90 && (e.ctrlKey || e.metaKey)) {
     undoToPreviousState();
   }
 }
 
-function saveState() {
-  // save state by taking image of background
-  // for more info look at reference for get
-  previousState = get();
-}
-function undoToPreviousState() {
-  // if previousState doesn't exist ie is null
-  // return without doing anything
-  if (!previousState) {
-    return;
-  }
-  // else draw the background (in this case white)
-  // and draw the previous state
-  background(255);
-  image(previousState, 0, 0);
-  // then set previous state to null
-  previousState = null;
-}
 function touchMoved() {
   return false;
 }
@@ -154,12 +134,14 @@ function keyPressed() {
 }
 function addbrushes() {
   brushes.push(new Brush("eraser", false, eraser));
+  brushes.push(new Brush("eraser2", false, eraser2));
   brushes.push(new Brush("circleBrush", false, circleBrush));
   brushes.push(new Brush("sprayPaint", false, sprayPaint));
   brushes.push(new Brush("hatching", false, hatching));
   brushes.push(new Brush("brushtest1", false, brushtest1));
-  brushes.push(new Brush("brushtest2", false, brushtest2));
-  brushes.push(new Brush("brushtest3", false, brushtest3));
+  brushes.push(new Brush("brushtest2-1", false, brushtest2));
+  brushes.push(new Brush("brushtest2-2", false, brushtest3));
+  brushes.push(new Brush("brushtest2-3", false, brushtest33));
   brushes.push(new Brush("brushtest4", false, brushtest4));
   brushes.push(new Brush("brushtest5", false, brushtest5));
   brushes.push(new Brush("brushtest6", false, brushtest6));
@@ -192,20 +174,22 @@ function createinterface() {
     mygui.child(x1.btn);
   }
 }
-
-// the brush functions
+function keyPressed() {
+  if (keyCode === 69) {
+    background("#ffffff");
+  }
+}
 function sprayPaint(colorbtn) {
-  // console.log(c);
   stroke(colorbtn);
 
   strokeWeight(1);
 
   const speed = abs(mouseX - pmouseX) + abs(mouseY - pmouseY);
 
-  const minRadius = 10;
-  const sprayDensity = widthof;
+  const minRadius = widthof;
+  const sprayDensity = 80;
 
-  const r = minRadius * 6;
+  const r = minRadius;
   const rSquared = r * r;
 
   const lerps = 20;
@@ -232,7 +216,7 @@ function hatching(colorbtn) {
 
   vector.setMag(speed / 2);
 
-  const lerps = widthof;
+  const lerps = 10;
 
   for (let i = 0; i < lerps; i++) {
     const x = lerp(mouseX, pmouseX, i / lerps);
@@ -243,9 +227,7 @@ function hatching(colorbtn) {
 }
 
 function circleBrush(colorbtn) {
-  // const hue = (frameCount * 10) % 360
   const hsbaColor = color(`hsba(${brushColor}, 100%, 100%, 0.6)`);
-  // fill(brushColor);
   fill(colorbtn);
   noStroke();
   const distance = dist(mouseX, mouseY, pmouseX, pmouseY);
@@ -258,73 +240,66 @@ function eraser() {
   fill(255);
   circle(mouseX, mouseY, widthof);
 }
+function eraser2() {
+  noStroke();
+  fill(255);
+  rectMode(CENTER);
+  rect(mouseX, mouseY, widthof / 2);
+}
 function brushtest1(colorbtn) {
   fill(colorbtn);
   noStroke();
-
+  push();
   translate(mouseX, mouseY);
   const angle = Math.atan2(mouseY - pmouseY, mouseX - pmouseX);
   rotate(angle);
-
-  // set minumum width and height of the toothpick-shaped ellipse
-  // const minSize = 5;
   const minSize = widthof;
-
-  // find the distance between current mouse point and previous mouse point
   const distance = dist(mouseX, mouseY, pmouseX, pmouseY);
-  // draw the toothpick-shaped ellipse
   ellipse(0, 0, distance * 18 + minSize, minSize);
+  pop();
 }
 function brushtest2(colorbtn) {
-  // set the color and brush style
   stroke(colorbtn);
   strokeWeight(1);
-  // const width = 5;
   const width = widthof;
-  // set the number of times we lerp the line in the for loop
-  const lerps = 16;
-  // repeat the slanted line with lerping
+  const lerps = 10;
   for (let i = 0; i <= lerps - 1; i++) {
-    // find the lerped x and y coordinates between the mouse points
     const x = lerp(mouseX, pmouseX, i / lerps);
     const y = lerp(mouseY, pmouseY, i / lerps);
-    // draw a slanted line
     line(x - width, y - width, x + width, y + width);
   }
 }
-function brushtest3(colorbtn) {
-  // set the color and brush style
+function brushtest33(colorbtn) {
   stroke(colorbtn);
   strokeWeight(1);
-  // const width = 5;
   const width = widthof;
-  // set the number of times we lerp the line in the for loop
-  const lerps = 16;
-  // repeat the slanted line with lerping
+  const lerps = 10;
   for (let i = 0; i <= lerps - 1; i++) {
-    // find the lerped x and y coordinates between the mouse points
     const x = lerp(mouseX, pmouseX, i / lerps);
     const y = lerp(mouseY, pmouseY, i / lerps);
-    // draw a slanted line
+    line(x - width, y + width, x + width, y + width);
+  }
+}
+function brushtest3(colorbtn) {
+  stroke(colorbtn);
+  strokeWeight(1);
+  const width = widthof * -1;
+  const lerps = 16;
+  for (let i = 0; i <= lerps - 1; i++) {
+    const x = lerp(mouseX, pmouseX, i / lerps);
+    const y = lerp(mouseY, pmouseY, i / lerps);
     line(x - width, y - width, x + width, y + width);
     line(width - (x - width), y - width, x + width, y + width);
   }
 }
 function brushtest4(colorbtn) {
-  // set the color and brush style
   stroke(colorbtn);
-  strokeWeight(4);
-
-  // set the number of times we lerp the point in the for loop
+  let changin = map(widthof, 0, 500, 0, 30);
+  strokeWeight(changin);
   const lerps = 4;
-
-  // repeat the point with lerping
   for (let i = 0; i < lerps; i++) {
-    // find lerped x and y coordinates of the point
     const x = lerp(mouseX, pmouseX, i / lerps + lerps);
     const y = lerp(mouseY, pmouseY, i / lerps + lerps);
-
-    // draw a point
     point(x, y);
   }
 }
@@ -359,17 +334,16 @@ function brushtest5(colorbtn) {
     }
     stroke(colorbtn);
 
-    strokeWeight(oldR + diff); // AMEND: oldR -> oldR+diff
+    strokeWeight(oldR + diff);
     line(x, y, oldX, oldY);
-    strokeWeight(oldR); // ADD
-    line(x + diff * 1.5, y + diff * 2, oldX + diff * 2, oldY + diff * 2); // ADD
-    line(x - diff, y - diff, oldX - diff, oldY - diff); // ADD
+    strokeWeight(oldR);
+    line(x + diff * 1.5, y + diff * 2, oldX + diff * 2, oldY + diff * 2);
+    line(x - diff, y - diff, oldX - diff, oldY - diff);
   }
 }
 function brushtest6(colorbtn) {
   brushSize = widthof;
   stroke(colorbtn);
-  // let x = mouseX;
   // let y = mouseY;
   // let x2 = mouseX;
   // let y2 = mouseY;
@@ -400,11 +374,11 @@ function brushtest6(colorbtn) {
     }
     stroke(colorbtn);
 
-    strokeWeight(oldR + diff); // AMEND: oldR -> oldR+diff
+    strokeWeight(oldR + diff);
     line(x2, y2, oldX, oldY);
-    strokeWeight(oldR); // ADD
-    line(x2 + diff * 1.5, y2 + diff * 2, oldX + diff * 2, oldY + diff * 2); // ADD
-    line(x2 - diff, y2 - diff, oldX - diff, oldY - diff); // ADD
+    strokeWeight(oldR);
+    line(x2 + diff * 1.5, y2 + diff * 2, oldX + diff * 2, oldY + diff * 2);
+    line(x2 - diff, y2 - diff, oldX - diff, oldY - diff);
     // console.log(x);
   }
 }
@@ -444,3 +418,5 @@ function brushtest7(colorbtn) {
   }
   // rect(mouseX + random() * 100 * tive, mouseY + random() * tive * 100, 20, 20);
 }
+// influenced by : https://library.superhi.com/posts/how-to-paint-with-code-creating-paintbrushes
+// used p5.gui, p5.riso for this project
