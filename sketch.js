@@ -6,6 +6,7 @@ class Brush {
     this.func = func;
     this.colorbtn = [0, 0, 0];
     this.btn = createButton(this.name);
+    // this.riso = currentRiso;
   }
   changeActive() {
     this.active = !this.active;
@@ -27,6 +28,28 @@ class Brush {
     this.func(this.colorbtn);
   }
 }
+// const risoColors = [];
+// for (const { name } of RISOCOLORS) {
+//   risoColors.push(name.toLowerCase());
+// }
+var risoColors = [
+  "green",
+  "red",
+  "blue",
+  "mint",
+  "orange",
+  "flatgod",
+  "yellow",
+  "purple",
+  "black",
+  "peach",
+  "aqua",
+  "fluorescentpink",
+  "fluorescentorange",
+  "smokyteal",
+];
+// var currentRiso = 0;
+// console.log(risoColors);
 var brushNum;
 var brushColor = [180, 0, 200];
 var brushStroke = false;
@@ -47,6 +70,11 @@ let vx = 0;
 let vy = 0;
 let splitNum = 100;
 let diff = 8;
+let blueCa;
+var widthof = 5;
+var widthofMax = 500;
+var widthofMin = 1;
+var widthofStep = 1;
 function preload() {
   // img = loadImage("img.jpeg");
 }
@@ -55,14 +83,18 @@ function setup() {
   background("#ffffff");
   gui = createGui();
   gui.setPosition(windowWidth * 0.82, 0);
-  gui.addGlobals("brushColor", "opacity");
+  gui.addGlobals("brushColor", "opacity", "risoColors", "widthof");
   brushes = [];
   addbrushes();
   createinterface();
-  // image(img, 0, 0);
+  // blueCa = new Riso("blue");
+  // let justCyan = extractCMYKChannel(img, "blue");
+  // blueCa.image(justCyan, 0, 0);
 }
 
 function draw() {
+  clearRiso();
+  // risoNoStroke();
   // tint(255, 127);
   c = color(brushColor);
   c.setAlpha(opacity);
@@ -74,6 +106,7 @@ function draw() {
       }
     }
   }
+  drawRiso();
 }
 
 function touchMoved() {
@@ -100,6 +133,7 @@ function addbrushes() {
   brushes.push(new Brush("brushtest4", false, brushtest4));
   brushes.push(new Brush("brushtest5", false, brushtest5));
   brushes.push(new Brush("brushtest6", false, brushtest6));
+  brushes.push(new Brush("brushtest7", false, brushtest7));
 }
 function createinterface() {
   mygui = createDiv("");
@@ -108,6 +142,7 @@ function createinterface() {
   saveBtn.addClass("btnBig");
   saveBtn.mousePressed(() => {
     save("mySketch.png");
+    // exportRiso();
   });
   let clearBtn = createButton("clear");
   clearBtn.addClass("btnBig");
@@ -137,13 +172,13 @@ function sprayPaint(colorbtn) {
 
   const speed = abs(mouseX - pmouseX) + abs(mouseY - pmouseY);
 
-  const minRadius = 20;
-  const sprayDensity = 80;
+  const minRadius = 10;
+  const sprayDensity = widthof;
 
-  const r = minRadius * 3;
+  const r = minRadius * 6;
   const rSquared = r * r;
 
-  const lerps = 5;
+  const lerps = 20;
 
   for (let i = 0; i < lerps; i++) {
     const lerpX = lerp(mouseX, pmouseX, i / lerps / 2);
@@ -167,7 +202,7 @@ function hatching(colorbtn) {
 
   vector.setMag(speed / 2);
 
-  const lerps = 7;
+  const lerps = widthof;
 
   for (let i = 0; i < lerps; i++) {
     const x = lerp(mouseX, pmouseX, i / lerps);
@@ -191,7 +226,7 @@ function circleBrush(colorbtn) {
 function eraser() {
   noStroke();
   fill(255);
-  circle(mouseX, mouseY, 20);
+  circle(mouseX, mouseY, widthof);
 }
 function brushtest1(colorbtn) {
   fill(colorbtn);
@@ -202,7 +237,7 @@ function brushtest1(colorbtn) {
   rotate(angle);
 
   // set minumum width and height of the toothpick-shaped ellipse
-  const minSize = 4;
+  const minSize = 5;
 
   // find the distance between current mouse point and previous mouse point
   const distance = dist(mouseX, mouseY, pmouseX, pmouseY);
@@ -213,7 +248,8 @@ function brushtest2(colorbtn) {
   // set the color and brush style
   stroke(colorbtn);
   strokeWeight(1);
-  const width = 5;
+  // const width = 5;
+  const width = widthof;
   // set the number of times we lerp the line in the for loop
   const lerps = 16;
   // repeat the slanted line with lerping
@@ -229,7 +265,8 @@ function brushtest3(colorbtn) {
   // set the color and brush style
   stroke(colorbtn);
   strokeWeight(1);
-  const width = 5;
+  // const width = 5;
+  const width = widthof;
   // set the number of times we lerp the line in the for loop
   const lerps = 16;
   // repeat the slanted line with lerping
@@ -299,11 +336,12 @@ function brushtest5(colorbtn) {
   }
 }
 function brushtest6(colorbtn) {
+  brushSize = widthof;
   stroke(colorbtn);
   // let x = mouseX;
   // let y = mouseY;
-  let x2 = mouseX;
-  let y2 = mouseY;
+  // let x2 = mouseX;
+  // let y2 = mouseY;
   if (!f) {
     f = true;
     x2 = mouseX;
@@ -338,4 +376,40 @@ function brushtest6(colorbtn) {
     line(x2 - diff, y2 - diff, oldX - diff, oldY - diff); // ADD
     // console.log(x);
   }
+}
+function brushtest7(colorbtn) {
+  fill(colorbtn);
+  noStroke();
+  let size = 20;
+  let tive = random();
+  if (tive < 0.5) {
+    tive = -1;
+  } else {
+    tive = 1;
+  }
+  let bigdis = sqrt(
+    pow(abs(mouseX - pmouseX), 2) + pow(abs(mouseY - pmouseY), 2)
+  );
+  let smaldis = sqrt(2) * size;
+  tiveX = 1;
+  tiveY = 1;
+  let dis = bigdis / smaldis;
+  if (mouseX < pmouseX) {
+    tiveX = -1;
+  } else {
+    tiveX = 1;
+  }
+  if (mouseY < pmouseY) {
+    tiveY = -1;
+  } else {
+    tiveY = 1;
+  }
+  for (let i = 0; i < dis; i++) {
+    // let x = lerp(mouseX, pmouseX, i / dis);
+    // let y = lerp(mouseY, pmouseY, i / dis);
+    // circle(x + random() * 100 * tive, y + random() * tive * 100, size);
+    //
+    rect(mouseX + i * tiveX * size, mouseY + i * tiveY * size, size, size);
+  }
+  // rect(mouseX + random() * 100 * tive, mouseY + random() * tive * 100, 20, 20);
 }
