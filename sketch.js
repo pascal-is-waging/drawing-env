@@ -51,7 +51,8 @@ var risoColors = [
 // var currentRiso = 0;
 // console.log(risoColors);
 var brushNum;
-var brushColor = [180, 0, 200];
+// var brushColor = [180, 0, 200];
+var brushColor = ["#ff2205", "#3f05ff", "#91ff01"];
 var brushStroke = false;
 var opacity = 200;
 var opacityMax = 255;
