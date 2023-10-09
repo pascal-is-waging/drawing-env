@@ -267,7 +267,8 @@ function brushtest1(colorbtn) {
   rotate(angle);
 
   // set minumum width and height of the toothpick-shaped ellipse
-  const minSize = 5;
+  // const minSize = 5;
+  const minSize = widthof;
 
   // find the distance between current mouse point and previous mouse point
   const distance = dist(mouseX, mouseY, pmouseX, pmouseY);
