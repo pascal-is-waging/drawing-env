@@ -1,0 +1,39 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
+  border: black 1px solid;
+}
+.brushes {
+  width: 15%;
+  position: fixed;
+  right: 0rem;
+  top: 20%;
+  /* margin: 1rem; */
+  justify-items: center;
+}
+.btn {
+  padding: 1rem 1rem 1rem 1rem;
+  border-radius: 1rem;
+  background: white;
+  color: black;
+  margin: 0.2rem;
+  /* border: none; */
+}
+.btnBig {
+  padding: 1rem 1rem 1rem 1rem;
+  border-radius: 1rem;
+  background: black;
+  color: white;
+  margin: 0.2rem;
+}
+.btn.active {
+  background: greenyellow;
+  color: black;
+  border: 0.5px black solid;
+  /* border: 1px black solid; */
+}
