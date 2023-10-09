@@ -1,6 +1,6 @@
 # Drawing Env p5
 
-Drawing environment made with p5.js for a two day workshop in Hongik University, Seoul, South Korea. An experiment to create forms while learing Hangul.
+Drawing environment made with p5.js for a two day workshop in Hongik University in Seoul. An experiment to create forms while learing Hangul.
 
 ### results:
 
