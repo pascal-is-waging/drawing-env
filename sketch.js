@@ -5,7 +5,6 @@ class Brush {
     this.func = func;
     this.colorbtn = [0, 0, 0];
     this.btn = createButton(this.name);
-    // this.riso = currentRiso;
   }
   changeActive() {
     this.active = !this.active;
@@ -90,7 +89,6 @@ function setup() {
   brushes = [];
   addbrushes();
   createinterface();
-  saveState();
   // blueCa = new Riso("blue");
   // let justCyan = extractCMYKChannel(img, "blue");
   // blueCa.image(justCyan, 0, 0);
@@ -103,7 +101,6 @@ function draw() {
   c = color(brushColor);
   c.setAlpha(opacity);
   if (mouseIsPressed === true) {
-    saveState();
     for (x1 of brushes) {
       if (x1.active) {
         x1.runfunction();
